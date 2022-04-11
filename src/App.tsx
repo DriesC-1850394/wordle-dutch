@@ -101,14 +101,36 @@ const App = () => {
       if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) != 0) correct = false
     }
     for (let idx = 0; idx < words[activeWordIndex].length; idx++) {
-      if (correctWord.includes(words[activeWordIndex][idx].char) && !lettersFound.includes(words[activeWordIndex][idx].char)) {
-        words[activeWordIndex][idx].color = "#a6944c"
+      if (correctWord.includes(words[activeWordIndex][idx].char)) {
+
+        if (!lettersFound.includes(words[activeWordIndex][idx].char) ||
+          countInString(correctWord, words[activeWordIndex][idx].char) > countInArray(lettersFound, words[activeWordIndex][idx].char)) {
+          words[activeWordIndex][idx].color = "#a6944c"
+          lettersFound.push(words[activeWordIndex][idx].char)
+        }
       }
     }
 
-    // TODO Win or Lose
     if (activeWordIndex + 1 == 6 || correct) end()
     setActiveWordIndex(activeWordIndex + 1)
+  }
+
+  function countInString(word: string, char: string): number {
+    let count: number = 0;
+
+    for (const c of word)
+      count = c.localeCompare(char) == 0 ? count + 1 : count
+
+    return count
+  }
+
+  function countInArray(array: Array<string>, char: string): number {
+    let count: number = 0
+
+    for (const c of array)
+      count = c.localeCompare(char) == 0 ? count + 1 : count
+
+    return count
   }
 
   function setUsedLetters(char: string, color: string) {
