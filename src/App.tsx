@@ -1,3 +1,4 @@
+import { stringify } from 'querystring';
 import { useState } from 'react';
 import './App.css';
 import { data } from './data'
@@ -6,23 +7,33 @@ import InputSection from './InputSection/InputSection';
 import KeyboardSection from './KeyboardSection/KeyboardSection';
 
 const App = () => {
-  const [words, updateWords] = useState<Array<Array<{ char: string, color: string }>>>([
-    [{ char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }],
-    [{ char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }],
-    [{ char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }],
-    [{ char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }],
-    [{ char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }],
-    [{ char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }, { char: "", color: "#3d3939" }]
+  const [words, updateWords] = useState<Array<Array<{ char: string, color: string, animate: boolean }>>>([
+    [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
+    [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
+    [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
+    [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
+    [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
+    [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }]
   ])
 
+  const [firstRow, setFirstRow] = useState<Array<{ char: string, color: string }>>([{ char: 'a', color: "#3d3939" }, { char: 'z', color: "#3d3939" }, { char: 'e', color: "#3d3939" }, { char: 'r', color: "#3d3939" }, { char: 't', color: "#3d3939" }, { char: 'y', color: "#3d3939" }, { char: 'u', color: "#3d3939" }, { char: 'i', color: "#3d3939" }, { char: 'o', color: "#3d3939" }, {
+    char: 'p', color: "#3d3939"
+  }])
+  const [secondRow, setSecondRow] = useState<Array<{ char: string, color: string }>>([{ char: 'q', color: "#3d3939" }, { char: 's', color: "#3d3939" }, { char: 'd', color: "#3d3939" }, { char: 'f', color: "#3d3939" }, { char: 'g', color: "#3d3939" }, { char: 'h', color: "#3d3939" }, { char: 'j', color: "#3d3939" }, { char: 'k', color: "#3d3939" }, { char: 'l', color: "#3d3939" }, {
+    char: 'm', color: "#3d3939"
+  }])
+  const [thirdRow, setThirdRow] = useState<Array<{ char: string, color: string }>>([{ char: 'w', color: "#3d3939" }, { char: 'x', color: "#3d3939" }, { char: 'c', color: "#3d3939" }, { char: 'v', color: "#3d3939" }, { char: 'b', color: "#3d3939" }, { char: 'n', color: "#3d3939" }])
+
   const [activeWordIndex, setActiveWordIndex] = useState<number>(0)
-  const [correctWord, setCorrectWord] = useState(getRandomWord)
+  const [correctWord] = useState(getRandomWord)
+
+  const [disabled, setDisabled] = useState(false)
 
   return (
     <div className="App">
       <div className="InDevelopment">In Development</div>
       <InputSection activeWords={words} activeWordIndex={activeWordIndex} />
-      <KeyboardSection onClick={onKeyPress} />
+      <KeyboardSection onClick={onKeyPress} fRow={firstRow} sRow={secondRow} tRow={thirdRow} disabled={disabled} />
     </div>
   );
 
@@ -37,6 +48,7 @@ const App = () => {
       if (eIndex == 5) return;
 
       words[activeWordIndex][eIndex].char = char
+      words[activeWordIndex][eIndex].animate = true
 
       updateWords([...words])
     }
@@ -68,11 +80,21 @@ const App = () => {
     let correct: boolean = true
 
     for (let idx = 0; idx < words[activeWordIndex].length; idx++) {
-      if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) == 0)
+      if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) == 0) {
         words[activeWordIndex][idx].color = "#70a64c"
 
-      else if (correctWord.includes(words[activeWordIndex][idx].char))
+        setUsedLetters(words[activeWordIndex][idx].char, "#70a64c")
+      }
+
+      else if (correctWord.includes(words[activeWordIndex][idx].char)) {
         words[activeWordIndex][idx].color = "#a6944c"
+
+        setUsedLetters(words[activeWordIndex][idx].char, "#a6944c")
+      }
+
+      else {
+        setUsedLetters(words[activeWordIndex][idx].char, "#3d393979")
+      }
 
       if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) != 0) correct = false
     }
@@ -82,8 +104,18 @@ const App = () => {
     setActiveWordIndex(activeWordIndex + 1)
   }
 
+  function setUsedLetters(char: string, color: string) {
+    [firstRow, secondRow, thirdRow].forEach(element => element.forEach(key => {
+      if (key.char.localeCompare(char) == 0 && key.color.localeCompare("#70a64c") != 0) key.color = color
+    }))
+
+    setFirstRow([...firstRow])
+    setSecondRow([...secondRow])
+    setThirdRow([...thirdRow])
+  }
+
   function end() {
-    console.log("wooohoooo")
+    setDisabled(true)
   }
 
   function findIndex(char: string): number {

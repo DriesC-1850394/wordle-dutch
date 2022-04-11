@@ -24,6 +24,20 @@
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
+  user-select: none;
+}
+
+@keyframes spin {
+  from {
+    transform: scale(0.8, 0.8);
+  }
+  to {
+    transform: scale(1, 1);
+  }
+}
+
+.Animate {
+  animation: spin 0.4s forwards;
 }
 
 .InDevelopment {
@@ -111,7 +125,6 @@
 
   text-align: center;
 
-  background-color: #3d3939;
   border-radius: 4px;
 
   cursor: pointer;

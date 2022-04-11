@@ -1,7 +1,7 @@
 
-const InputElement = ({ color, char }: { color: string, char: string }) => {
+const InputElement = ({ color, char, animate }: { color: string, char: string, animate: boolean }) => {
     return (
-        <div className="InputElement" style={{ backgroundColor: color }}>
+        <div className={animate ? "InputElement Animate" : "InputElement"} style={{ backgroundColor: color }}>
             {char}
         </div>
     )
