@@ -156,7 +156,7 @@
   row-gap: 20px;
 
   color: white;
-  font-size: 50px;
+  font-size: calc(100vh / 27);
 
   left: 50%;
   top: 50%;
