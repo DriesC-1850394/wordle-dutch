@@ -102,8 +102,7 @@
   align-items: center;
 
   flex-direction: column;
-  column-gap: 8px;
-  row-gap: 8px;
+  row-gap: calc(100vh / 97);
 }
 
 .KeyboardElements {
@@ -113,8 +112,7 @@
   align-items: center;
 
   width: fit-content;
-  column-gap: 14px;
-  row-gap: 14px;
+  column-gap: calc(100vw / 147);
 }
 
 .KeyboardElement,
@@ -144,5 +142,3 @@
   width: calc(100vw / 32);
   height: calc(100vh / 13.61);
 }
-
-/* 2560 1361 */
