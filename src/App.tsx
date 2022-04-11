@@ -30,11 +30,13 @@ const App = () => {
   const [correctWord] = useState(getRandomWord)
 
   const [disabled, setDisabled] = useState(false)
+  const [invalid, setInvalid] = useState(false)
 
   return (
     <div className="App">
       <div className="InDevelopment">In Development</div>
-      <InputSection activeWords={words} activeWordIndex={activeWordIndex} />
+      <div className={invalid ? "WordUnknown" : "DisplayNone"}>Woord is niet gekend</div>
+      <InputSection activeWords={words} />
       <KeyboardSection onClick={onKeyPress} fRow={firstRow} sRow={secondRow} tRow={thirdRow} disabled={disabled} />
     </div>
   );
@@ -62,6 +64,7 @@ const App = () => {
   }
 
   function popLast() {
+    setInvalid(false)
     if (findIndex("") == 0) return;
 
     let eIndex: number = findIndex("") - 1
@@ -81,7 +84,10 @@ const App = () => {
     })
 
     // Handle faulty words
-    if (!data.includes(word)) return;
+    if (!data.includes(word)) {
+      setInvalid(true)
+      return;
+    }
 
     let correct: boolean = true
 
