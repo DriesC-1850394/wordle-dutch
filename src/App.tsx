@@ -85,7 +85,7 @@ const App = () => {
 
   useEffect(() => {
     console.log(cookies.get("wData"))
-
+    console.log(cookies.get("statistics"))
     window.addEventListener('keydown', keypress)
 
     return () => window.removeEventListener('keydown', keypress)
@@ -222,7 +222,7 @@ const App = () => {
       activeWordIndex: activeWordIndex
     })
 
-    if (activeWordIndex + 1 == 6 || correct) end()
+    if (activeWordIndex + 1 == 6 || correct) end(correct)
   }
 
   function countInString(word: string, char: string): number {
@@ -253,16 +253,43 @@ const App = () => {
     setThirdRow([...thirdRow])
   }
 
-  function end() {
+  function end(correct: boolean) {
     setShowResult(true)
     setDisabled(true)
+
+    let timeLeft: { hours: number, minutes: number, seconds: number } = calculateTimeLeft()
+
+    let maxTime: number = timeLeft.hours * 3600 + timeLeft.minutes * 60 + timeLeft.seconds
 
     cookies.set("wData", {
       words: words,
       activeWordIndex: activeWordIndex
+    }, {
+      maxAge: maxTime
     })
 
-    cookies.set("bData", true)
+    cookies.set("bData", true, {
+      maxAge: maxTime
+    })
+
+    let stats: {
+      numCorrect: number,
+      numGuesses: Array<number>
+    } = cookies.get("statistics")
+
+    if (stats == undefined) {
+      cookies.set("statistics", {
+        numCorrect: correct ? 1 : 0,
+        numGuesses: [activeWordIndex]
+      })
+    }
+
+    else {
+      stats.numGuesses.push(activeWordIndex + 1)
+      stats.numCorrect = correct ? stats.numCorrect + 1 : stats.numCorrect
+
+      cookies.set("statistics", stats)
+    }
   }
 
   function findIndex(char: string): number {
