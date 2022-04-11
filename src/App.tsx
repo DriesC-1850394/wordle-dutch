@@ -147,7 +147,7 @@ const App = () => {
     for (let idx = 0; idx < words[activeWordIndex].length; idx++) {
       if (correctWord.includes(words[activeWordIndex][idx].char)) {
 
-        if (!lettersFound.includes(words[activeWordIndex][idx].char) ||
+        if (!lettersFound.includes(words[activeWordIndex][idx].char) &&
           countInString(correctWord, words[activeWordIndex][idx].char) > countInArray(lettersFound, words[activeWordIndex][idx].char)) {
           words[activeWordIndex][idx].color = "#a6944c"
           lettersFound.push(words[activeWordIndex][idx].char)
