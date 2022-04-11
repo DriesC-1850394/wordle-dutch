@@ -42,7 +42,7 @@
 
 .InDevelopment {
   position: absolute;
-  right: 25px;
+  right: 100px;
   top: 0;
 
   background-color: #3d3939;
@@ -167,7 +167,7 @@
   width: 40%;
   height: 50%;
 
-  animation: show 5s forwards;
+  animation: show 3s forwards;
 
   border-radius: 8px;
 }
@@ -208,4 +208,96 @@
 .KeyboardElement {
   width: calc(100vw / 32);
   height: calc(100vh / 13.61);
+}
+
+.ShareButton {
+  border: none;
+
+  background-color: #83ba59;
+  color: white;
+
+  width: 250px;
+  height: 40px;
+
+  text-transform: uppercase;
+  border-radius: 4px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.Close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+
+  font-size: 12px;
+  font-weight: lighter;
+
+  cursor: pointer;
+}
+
+.ShowRresult {
+  position: absolute;
+
+  top: 0;
+  right: 12px;
+  padding: 10px 20px;
+
+  color: white;
+
+  cursor: pointer;
+}
+
+.ResultWord {
+  font-size: 24px;
+}
+
+.ClosingWord {
+  font-size: 18px;
+}
+
+@media only screen and (max-width: 500px) {
+  .KeyboardElement {
+    width: 30px;
+    height: 40px;
+  }
+
+  .KeyboardSpecial {
+    width: 60px;
+    height: 40px;
+  }
+
+  .KeyboardElement,
+  .KeyboardSpecial {
+    font-size: 10px;
+    font-weight: normal;
+  }
+
+  .KeyboardElements {
+    column-gap: 5px;
+  }
+
+  .InputSection {
+    margin-top: 120px;
+  }
+
+  .InputElement {
+    width: 40px;
+    height: 40px;
+
+    font-weight: normal;
+    font-size: 12px;
+  }
+
+  .InDevelopment {
+    font-size: 12px;
+    font-weight: normal;
+  }
+
+  .Result {
+    width: 80vw;
+    height: 60vw;
+  }
 }

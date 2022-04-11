@@ -1,3 +1,5 @@
+import { faCar, faSquarePollVertical } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import './App.css';
 import { data } from './data'
@@ -29,6 +31,7 @@ const App = () => {
   const [disabled, setDisabled] = useState(false)
   const [invalid, setInvalid] = useState(false)
   const [won, setWon] = useState(false)
+  const [showResult, setShowResult] = useState(false)
 
   var keypress = (event: { keyCode: number; key: string; }) => {
     if (disabled) return;
@@ -44,15 +47,19 @@ const App = () => {
   return (
     <div className="App">
       <div className="InDevelopment">In Development</div>
+      {disabled && <div className="ShowRresult" onClick={() => setShowResult(true)}>
+        <FontAwesomeIcon icon={faSquarePollVertical} size="2x"></FontAwesomeIcon>
+      </div>}
       <div className={invalid ? "WordUnknown" : "DisplayNone"}>Woord is niet gekend</div>
-      <div className={disabled ? 'Result' : 'DisplayNone'}>
+      <div className={showResult ? 'Result' : 'DisplayNone'}>
+        <div className="Close" onClick={() => setShowResult(false)}>X</div>
         <div className="ResultWord">
-          Het woord was: {correctWord}
+          {correctWord}
         </div>
         <div className="ClosingWord">
           {won ? 'Je hebt goed geraden!' : 'Je hebt het helaas niet geraden.'}
         </div>
-        <button onClick={() => copy()}>Resultaat Kopieren</button>
+        <button className="ShareButton" onClick={() => copy()}>Resultaat Kopieren</button>
       </div>
       <InputSection activeWords={words} />
       <KeyboardSection onClick={onKeyPress} fRow={firstRow} sRow={secondRow} tRow={thirdRow} disabled={disabled} />
@@ -191,6 +198,7 @@ const App = () => {
   }
 
   function end(correct: boolean) {
+    setShowResult(true)
     setDisabled(true)
     setWon(correct)
   }
