@@ -133,6 +133,45 @@
   animation: move 1s normal;
 }
 
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 100;
+  }
+}
+
+.Result {
+  z-index: 100;
+  position: absolute;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-direction: column;
+
+  row-gap: 20px;
+
+  color: white;
+  font-size: 50px;
+
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -70%);
+
+  background-color: #3d3939;
+
+  width: 40%;
+  height: 50%;
+
+  animation: show 5s forwards;
+
+  border-radius: 8px;
+}
+
 .KeyboardElements {
   display: flex;
   flex-direction: row;

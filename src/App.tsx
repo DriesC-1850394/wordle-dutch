@@ -1,6 +1,3 @@
-// TODO Give "Word does not exist" message
-// TODO Accept keyboard input
-
 import { useEffect, useState } from 'react';
 import './App.css';
 import { data } from './data'
@@ -31,6 +28,7 @@ const App = () => {
 
   const [disabled, setDisabled] = useState(false)
   const [invalid, setInvalid] = useState(false)
+  const [won, setWon] = useState(false)
 
   var keypress = (event: { keyCode: number; key: string; }) => {
     if (disabled) return;
@@ -47,10 +45,34 @@ const App = () => {
     <div className="App">
       <div className="InDevelopment">In Development</div>
       <div className={invalid ? "WordUnknown" : "DisplayNone"}>Woord is niet gekend</div>
+      <div className={disabled ? 'Result' : 'DisplayNone'}>
+        <div className="ResultWord">
+          Het woord was: {correctWord}
+        </div>
+        <div className="ClosingWord">
+          {won ? 'Je hebt goed geraden!' : 'Je hebt het helaas niet geraden.'}
+        </div>
+        <button onClick={() => copy()}>Resultaat Kopieren</button>
+      </div>
       <InputSection activeWords={words} />
       <KeyboardSection onClick={onKeyPress} fRow={firstRow} sRow={secondRow} tRow={thirdRow} disabled={disabled} />
     </div>
   );
+
+  function copy() {
+    let string = "Wordle Dutch " + (activeWordIndex) + "/6\n\n"
+
+    for (let idx = 0; idx < activeWordIndex; idx++) {
+      for (let jdx = 0; jdx < 5; jdx++) {
+        if (words[idx][jdx].color.localeCompare("#a6944c") == 0) string += "🟨"
+        else if (words[idx][jdx].color.localeCompare("#70a64c") == 0) string += "🟩"
+        else string += "⬛️"
+      }
+      string += "\n"
+    }
+
+    navigator.clipboard.writeText(string)
+  }
 
   function onKeyPress(char: string) {
     if (char == undefined) return false;
@@ -59,7 +81,7 @@ const App = () => {
 
     else if (char.toLocaleLowerCase().localeCompare("enter") == 0) enterWord()
 
-    if (!"abcdefghijklmnopqrstuvwxyz".includes(char)) return false;
+    if (!"abcdefghijklmnopqrstuvwxyz".includes(char)) return;
 
     let eIndex: number = findIndex("")
 
@@ -69,8 +91,6 @@ const App = () => {
     words[activeWordIndex][eIndex].animate = true
 
     updateWords([...words])
-
-    return true
   }
 
   function popLast() {
@@ -139,7 +159,7 @@ const App = () => {
 
     setActiveWordIndex(activeWordIndex + 1)
 
-    if (activeWordIndex + 1 == 6 || correct) end()
+    if (activeWordIndex + 1 == 6 || correct) end(correct)
   }
 
   function countInString(word: string, char: string): number {
@@ -170,8 +190,9 @@ const App = () => {
     setThirdRow([...thirdRow])
   }
 
-  function end() {
+  function end(correct: boolean) {
     setDisabled(true)
+    setWon(correct)
   }
 
   function findIndex(char: string): number {
