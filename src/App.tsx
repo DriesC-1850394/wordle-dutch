@@ -1,4 +1,6 @@
-import { stringify } from 'querystring';
+// TODO Give "Word does not exist" message
+// TODO Accept keyboard input
+
 import { useState } from 'react';
 import './App.css';
 import { data } from './data'
@@ -38,9 +40,13 @@ const App = () => {
   );
 
   function onKeyPress(char: string) {
-    if (char.localeCompare("delete") == 0) popLast()
+    if (char == undefined) return;
 
-    else if (char.localeCompare("enter") == 0) enterWord()
+    if (char.localeCompare("verwijder") == 0) popLast()
+
+    else if (char.toLocaleLowerCase().localeCompare("enter") == 0) enterWord()
+
+    if (!"abcdefghijklmnopqrstuvwxyz".includes(char)) return;
 
     else {
       let eIndex: number = findIndex("")

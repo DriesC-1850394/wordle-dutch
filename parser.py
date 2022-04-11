@@ -1,6 +1,6 @@
 list = []
 
-special_chars = ["'", "-", ".", ",", ";", "_", "!"]
+alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 with open("dict.txt", "r+") as file:
     for line in file:
@@ -9,9 +9,8 @@ with open("dict.txt", "r+") as file:
         if len(line) == 5:
             correct = True
             for char in line:
-                if char in special_chars:
+                if not char.lower() in alphabet:
                     correct = False
-                    break
 
             if correct:
                 list.append(line.lower())
