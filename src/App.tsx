@@ -1,7 +1,9 @@
 import { faCar, faSquarePollVertical } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { time } from 'console';
 import { useEffect, useState } from 'react';
 import './App.css';
+import { daily } from './daily_words';
 import { data } from './data'
 
 import InputSection from './InputSection/InputSection';
@@ -17,6 +19,34 @@ const App = () => {
     [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }]
   ])
 
+  const calculateTimeLeft = (): { hours: number, minutes: number, seconds: number } => {
+    let tonight: Date = new Date();
+
+    tonight.setHours(23)
+    tonight.setMinutes(59)
+    tonight.setSeconds(59)
+
+    let difference = +tonight - +new Date()
+
+    let timeLeft: { hours: number, minutes: number, seconds: number } = {
+      hours: 0,
+      minutes: 0,
+      seconds: 0
+    };
+
+    if (difference > 0) {
+      timeLeft = {
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60)
+      };
+    }
+
+    return timeLeft;
+  }
+
+  const [timeLeft, setTimeLeft] = useState<{ hours: number, minutes: number, seconds: number }>(calculateTimeLeft)
+
   const [firstRow, setFirstRow] = useState<Array<{ char: string, color: string }>>([{ char: 'a', color: "#3d3939" }, { char: 'z', color: "#3d3939" }, { char: 'e', color: "#3d3939" }, { char: 'r', color: "#3d3939" }, { char: 't', color: "#3d3939" }, { char: 'y', color: "#3d3939" }, { char: 'u', color: "#3d3939" }, { char: 'i', color: "#3d3939" }, { char: 'o', color: "#3d3939" }, {
     char: 'p', color: "#3d3939"
   }])
@@ -26,7 +56,7 @@ const App = () => {
   const [thirdRow, setThirdRow] = useState<Array<{ char: string, color: string }>>([{ char: 'w', color: "#3d3939" }, { char: 'x', color: "#3d3939" }, { char: 'c', color: "#3d3939" }, { char: 'v', color: "#3d3939" }, { char: 'b', color: "#3d3939" }, { char: 'n', color: "#3d3939" }])
 
   const [activeWordIndex, setActiveWordIndex] = useState<number>(0)
-  const [correctWord] = useState(getRandomWord)
+  const [correctWord] = useState(daily)
 
   const [disabled, setDisabled] = useState(false)
   const [invalid, setInvalid] = useState(false)
@@ -41,7 +71,18 @@ const App = () => {
   }
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  });
+
+  useEffect(() => {
     window.addEventListener('keydown', keypress)
+
+    return () => window.removeEventListener('keydown', keypress)
+
   }, [activeWordIndex])
 
   return (
@@ -53,13 +94,20 @@ const App = () => {
       <div className={invalid ? "WordUnknown" : "DisplayNone"}>Woord is niet gekend</div>
       <div className={showResult ? 'Result' : 'DisplayNone'}>
         <div className="Close" onClick={() => setShowResult(false)}>X</div>
+        <div className="ClosingWord">
+          Meer is onderweg!
+        </div>
         <div className="ResultWord">
           {correctWord}
         </div>
-        <div className="ClosingWord">
-          {won ? 'Je hebt goed geraden!' : 'Je hebt het helaas niet geraden.'}
+        <div className="BottomSection">
+          <div className="TimeLeft">
+            {timeLeft.hours < 10 ? "0" + timeLeft.hours : timeLeft.hours}:
+            {timeLeft.minutes < 10 ? "0" + timeLeft.minutes : timeLeft.minutes}
+            {timeLeft.seconds < 10 ? "0" + timeLeft.seconds : timeLeft.seconds}
+          </div>
+          <button className="ShareButton" onClick={() => copy()}>Resultaat Kopieren</button>
         </div>
-        <button className="ShareButton" onClick={() => copy()}>Resultaat Kopieren</button>
       </div>
       <InputSection activeWords={words} />
       <KeyboardSection onClick={onKeyPress} fRow={firstRow} sRow={secondRow} tRow={thirdRow} disabled={disabled} />
@@ -107,8 +155,6 @@ const App = () => {
     let eIndex: number = findIndex("") - 1
 
     if (eIndex == -1) eIndex = 4
-
-    console.log(activeWordIndex)
 
     words[activeWordIndex][eIndex].char = ""; updateWords([...words])
   }
@@ -162,7 +208,7 @@ const App = () => {
       }
     }
 
-    window.removeEventListener('keydown', keypress)
+    // window.removeEventListener('keydown', keypress)
 
     setActiveWordIndex(activeWordIndex + 1)
 

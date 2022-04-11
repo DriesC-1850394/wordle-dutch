@@ -142,35 +142,6 @@
   }
 }
 
-.Result {
-  z-index: 100;
-  position: absolute;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  flex-direction: column;
-
-  row-gap: 20px;
-
-  color: white;
-  font-size: calc(100vh / 27);
-
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -70%);
-
-  background-color: #3d3939;
-
-  width: 40%;
-  height: 50%;
-
-  animation: show 3s forwards;
-
-  border-radius: 8px;
-}
-
 .KeyboardElements {
   display: flex;
   flex-direction: row;
@@ -215,7 +186,7 @@
   background-color: #83ba59;
   color: white;
 
-  width: 250px;
+  width: 188px;
   height: 40px;
 
   text-transform: uppercase;
@@ -224,6 +195,58 @@
   font-weight: bold;
 
   cursor: pointer;
+}
+
+.TimeLeft {
+  font-size: 22px;
+  font-weight: normal;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 148px;
+}
+
+.BottomSection {
+  display: flex;
+  width: 100%;
+  height: fit-content;
+
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Result {
+  z-index: 100;
+  position: absolute;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 32px;
+
+  flex-direction: column;
+
+  row-gap: 20px;
+
+  color: white;
+  font-size: calc(100vh / 27);
+
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -70%);
+
+  background-color: #3d3939;
+
+  width: 400px;
+  height: 400px;
+
+  animation: show 3s forwards;
+
+  border-radius: 8px;
 }
 
 .Close {
@@ -251,10 +274,13 @@
 
 .ResultWord {
   font-size: 24px;
+  text-transform: uppercase;
 }
 
 .ClosingWord {
   font-size: 18px;
+  text-transform: uppercase;
+  font-style: italic;
 }
 
 @media only screen and (max-width: 500px) {
