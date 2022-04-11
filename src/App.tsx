@@ -60,7 +60,7 @@ const App = () => {
   );
 
   function copy() {
-    let string = "Wordle Dutch " + (activeWordIndex) + "/6\n\n"
+    let string = "https://wordle-dutch.herokuapp.com/ " + (activeWordIndex) + "/6\n\n"
 
     for (let idx = 0; idx < activeWordIndex; idx++) {
       for (let jdx = 0; jdx < 5; jdx++) {
