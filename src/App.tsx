@@ -4,7 +4,6 @@ import { data } from './data'
 
 import InputSection from './InputSection/InputSection';
 import KeyboardSection from './KeyboardSection/KeyboardSection';
-import { randomInt } from 'crypto';
 
 const App = () => {
   const [words, updateWords] = useState<Array<Array<{ char: string, color: string }>>>([
@@ -21,6 +20,7 @@ const App = () => {
 
   return (
     <div className="App">
+      <div className="InDevelopment">In Development</div>
       <InputSection activeWords={words} activeWordIndex={activeWordIndex} />
       <KeyboardSection onClick={onKeyPress} />
     </div>
@@ -62,7 +62,7 @@ const App = () => {
       word += element.char
     })
 
-
+    // Handle faulty words
     if (!data.includes(word)) return;
 
     let correct: boolean = true

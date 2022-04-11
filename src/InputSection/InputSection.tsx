@@ -1,10 +1,6 @@
 import InputElement from "./InputElement/InputElement"
 
-const InputSection = ({ activeWords, activeWordIndex,  }: { activeWords: Array<Array<{ char: string, color: string }>>, activeWordIndex: number }) => {
-    const cPos: string = "#70a64c"
-    const wPos: string = "#a6944c"
-    const nPos: string = "#3d3939"
-
+const InputSection = ({ activeWords, activeWordIndex, }: { activeWords: Array<Array<{ char: string, color: string }>>, activeWordIndex: number }) => {
     return (
         <div className="InputSection">
             <div className="InputRow">
