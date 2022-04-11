@@ -5,19 +5,25 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { daily } from './daily_words';
 import { data } from './data'
+import { Cookies } from 'react-cookie'
 
 import InputSection from './InputSection/InputSection';
 import KeyboardSection from './KeyboardSection/KeyboardSection';
 
 const App = () => {
-  const [words, updateWords] = useState<Array<Array<{ char: string, color: string, animate: boolean }>>>([
-    [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
-    [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
-    [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
-    [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
-    [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
-    [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }]
-  ])
+  const cookies = new Cookies()
+
+  const [words, updateWords] = useState<Array<Array<{ char: string, color: string, animate: boolean }>>>(
+    cookies.get('wData') == undefined ?
+      [
+        [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
+        [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
+        [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
+        [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
+        [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
+        [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }]
+      ] : cookies.get('wData').words)
+
 
   const calculateTimeLeft = (): { hours: number, minutes: number, seconds: number } => {
     let tonight: Date = new Date();
@@ -55,13 +61,12 @@ const App = () => {
   }])
   const [thirdRow, setThirdRow] = useState<Array<{ char: string, color: string }>>([{ char: 'w', color: "#3d3939" }, { char: 'x', color: "#3d3939" }, { char: 'c', color: "#3d3939" }, { char: 'v', color: "#3d3939" }, { char: 'b', color: "#3d3939" }, { char: 'n', color: "#3d3939" }])
 
-  const [activeWordIndex, setActiveWordIndex] = useState<number>(0)
+  const [activeWordIndex, setActiveWordIndex] = useState<number>(cookies.get('wData') == undefined ? 0 : cookies.get('wData').activeWordIndex)
   const [correctWord] = useState(daily)
 
-  const [disabled, setDisabled] = useState(false)
+  const [disabled, setDisabled] = useState(cookies.get("bData") == undefined ? false : true)
   const [invalid, setInvalid] = useState(false)
-  const [won, setWon] = useState(false)
-  const [showResult, setShowResult] = useState(false)
+  const [showResult, setShowResult] = useState(cookies.get("bData") == undefined ? false : true)
 
   var keypress = (event: { keyCode: number; key: string; }) => {
     if (disabled) return;
@@ -79,6 +84,8 @@ const App = () => {
   });
 
   useEffect(() => {
+    console.log(cookies.get("wData"))
+
     window.addEventListener('keydown', keypress)
 
     return () => window.removeEventListener('keydown', keypress)
@@ -208,11 +215,14 @@ const App = () => {
       }
     }
 
-    // window.removeEventListener('keydown', keypress)
-
     setActiveWordIndex(activeWordIndex + 1)
 
-    if (activeWordIndex + 1 == 6 || correct) end(correct)
+    cookies.set("wData", {
+      words: words,
+      activeWordIndex: activeWordIndex
+    })
+
+    if (activeWordIndex + 1 == 6 || correct) end()
   }
 
   function countInString(word: string, char: string): number {
@@ -243,10 +253,16 @@ const App = () => {
     setThirdRow([...thirdRow])
   }
 
-  function end(correct: boolean) {
+  function end() {
     setShowResult(true)
     setDisabled(true)
-    setWon(correct)
+
+    cookies.set("wData", {
+      words: words,
+      activeWordIndex: activeWordIndex
+    })
+
+    cookies.set("bData", true)
   }
 
   function findIndex(char: string): number {
@@ -256,14 +272,6 @@ const App = () => {
       if (words[activeWordIndex][index].char.localeCompare(char) == 0) return index
 
     return index
-  }
-
-  function getRandomWord(): string {
-    let randInt: number = Math.floor(Math.random() * (data.length));
-
-    console.log(data[randInt])
-
-    return data[randInt]
   }
 }
 
