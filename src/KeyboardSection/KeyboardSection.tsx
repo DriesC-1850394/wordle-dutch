@@ -5,7 +5,8 @@ const KeyboardSection = ({ onClick, fRow, sRow, tRow, disabled }: { onClick: Fun
 
     useEffect(() => {
         document.addEventListener('keydown', (event) => {
-            onClick(event.key)
+            if (event.keyCode == 8) onClick("verwijder")
+            else onClick(event.key)
         })
     }, [])
 
