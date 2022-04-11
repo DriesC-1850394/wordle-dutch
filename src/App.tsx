@@ -79,16 +79,18 @@ const App = () => {
 
     let correct: boolean = true
 
+    const lettersFound = []
+
     for (let idx = 0; idx < words[activeWordIndex].length; idx++) {
       if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) == 0) {
         words[activeWordIndex][idx].color = "#70a64c"
+
+        lettersFound.push(words[activeWordIndex][idx].char)
 
         setUsedLetters(words[activeWordIndex][idx].char, "#70a64c")
       }
 
       else if (correctWord.includes(words[activeWordIndex][idx].char)) {
-        words[activeWordIndex][idx].color = "#a6944c"
-
         setUsedLetters(words[activeWordIndex][idx].char, "#a6944c")
       }
 
@@ -97,6 +99,11 @@ const App = () => {
       }
 
       if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) != 0) correct = false
+    }
+    for (let idx = 0; idx < words[activeWordIndex].length; idx++) {
+      if (correctWord.includes(words[activeWordIndex][idx].char) && !lettersFound.includes(words[activeWordIndex][idx].char)) {
+        words[activeWordIndex][idx].color = "#a6944c"
+      }
     }
 
     // TODO Win or Lose

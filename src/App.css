@@ -129,7 +129,7 @@
   color: white;
 
   text-transform: uppercase;
-  font-size: 18px;
+  font-size: calc(100vh / 76);
   font-weight: 400;
 }
 

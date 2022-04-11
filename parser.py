@@ -1,6 +1,6 @@
 list = []
 
-special_chars = ["'", "-"]
+special_chars = ["'", "-", ".", ",", ";", "_", "!"]
 
 with open("dict.txt", "r+") as file:
     for line in file:
