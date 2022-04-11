@@ -259,7 +259,10 @@
   .App {
     justify-content: center;
     align-items: center;
-    row-gap: 40px;
+    row-gap: 60px;
+
+    height: 100%;
+    position: fixed;
 
     padding: 0;
   }
@@ -282,10 +285,6 @@
 
   .KeyboardElements {
     column-gap: 5px;
-  }
-
-  .InputSection {
-    margin-top: 30px;
   }
 
   .InputElement {
