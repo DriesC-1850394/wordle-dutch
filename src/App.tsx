@@ -120,9 +120,9 @@ const App = () => {
   );
 
   function copy() {
-    let string = "https://wordle-dutch.herokuapp.com/ " + (activeWordIndex) + "/6\n\n"
+    let string = "https://wordle-dutch.herokuapp.com/ " + (activeWordIndex + 1) + "/6\n\n"
 
-    for (let idx = 0; idx < activeWordIndex; idx++) {
+    for (let idx = 0; idx < activeWordIndex + 1; idx++) {
       for (let jdx = 0; jdx < 5; jdx++) {
         if (words[idx][jdx].color.localeCompare("#a6944c") == 0) string += "🟨"
         else if (words[idx][jdx].color.localeCompare("#70a64c") == 0) string += "🟩"
