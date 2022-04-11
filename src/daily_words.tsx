@@ -1,6 +1,3 @@
-import { data } from './data'
-
-
 const words = [
     "zalig",
     "hindi",
@@ -415,27 +412,5 @@ const calculateTimeLeft = (): number => {
 function getDailyWord(): string {
     return words[calculateTimeLeft()]
 }
-
-
-// function getRandomWords(): Array<string> {
-//     let words: Array<string> = []
-
-
-//     while (words.length < 500) {
-//         let randomWord = getRandomWord()
-
-//         if (!words.includes(randomWord)) words.push(randomWord)
-//     }
-
-//     return words
-// }
-
-// function getRandomWord(): string {
-//     let randInt: number = Math.floor(Math.random() * (data.length));
-
-//     console.log(data[randInt])
-
-//     return data[randInt]
-// }
 
 export const daily = getDailyWord()

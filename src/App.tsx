@@ -103,7 +103,7 @@ const App = () => {
         <div className="BottomSection">
           <div className="TimeLeft">
             {timeLeft.hours < 10 ? "0" + timeLeft.hours : timeLeft.hours}:
-            {timeLeft.minutes < 10 ? "0" + timeLeft.minutes : timeLeft.minutes}
+            {timeLeft.minutes < 10 ? "0" + timeLeft.minutes : timeLeft.minutes}:
             {timeLeft.seconds < 10 ? "0" + timeLeft.seconds : timeLeft.seconds}
           </div>
           <button className="ShareButton" onClick={() => copy()}>Resultaat Kopieren</button>
