@@ -84,8 +84,6 @@ const App = () => {
   });
 
   useEffect(() => {
-    console.log(cookies.get("wData"))
-    console.log(cookies.get("statistics"))
     window.addEventListener('keydown', keypress)
 
     return () => window.removeEventListener('keydown', keypress)
