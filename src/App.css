@@ -27,7 +27,7 @@
   user-select: none;
 }
 
-@keyframes spin {
+@keyframes scale {
   from {
     transform: scale(0.8, 0.8);
   }
@@ -37,7 +37,7 @@
 }
 
 .Animate {
-  animation: spin 0.4s forwards;
+  animation: scale 0.4s forwards;
 }
 
 .InDevelopment {
@@ -62,7 +62,7 @@
 
   row-gap: 8px;
 
-  margin-top: 200px;
+  margin-top: calc(100vw / 10);
 }
 
 .InputRow {
@@ -76,8 +76,8 @@
 }
 
 .InputElement {
-  width: 80px;
-  height: 80px;
+  width: calc(100vw / 32);
+  height: calc(100vh / 17);
 
   text-align: center;
 
@@ -92,7 +92,7 @@
   font-family: "Roboto Condensed", sans-serif;
   font-weight: 700;
 
-  font-size: 36px;
+  font-size: calc(100vh / 38);
   text-transform: uppercase;
 }
 
@@ -136,11 +136,13 @@
 }
 
 .KeyboardSpecial {
-  width: 174px;
-  height: 100px;
+  width: calc(100vw / 14.71);
+  height: calc(100vh / 13.61);
 }
 
 .KeyboardElement {
-  width: 80px;
-  height: 100px;
+  width: calc(100vw / 32);
+  height: calc(100vh / 13.61);
 }
+
+/* 2560 1361 */
