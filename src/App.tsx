@@ -1,7 +1,7 @@
 // TODO Give "Word does not exist" message
 // TODO Accept keyboard input
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { data } from './data'
 
@@ -32,6 +32,17 @@ const App = () => {
   const [disabled, setDisabled] = useState(false)
   const [invalid, setInvalid] = useState(false)
 
+  var keypress = (event: { keyCode: number; key: string; }) => {
+    if (disabled) return;
+
+    if (event.keyCode == 8) onKeyPress("verwijder")
+    else onKeyPress(event.key)
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', keypress)
+  }, [activeWordIndex])
+
   return (
     <div className="App">
       <div className="InDevelopment">In Development</div>
@@ -42,25 +53,24 @@ const App = () => {
   );
 
   function onKeyPress(char: string) {
-    if (char == undefined) return;
+    if (char == undefined) return false;
 
     if (char.localeCompare("verwijder") == 0) popLast()
 
     else if (char.toLocaleLowerCase().localeCompare("enter") == 0) enterWord()
 
-    if (!"abcdefghijklmnopqrstuvwxyz".includes(char)) return;
+    if (!"abcdefghijklmnopqrstuvwxyz".includes(char)) return false;
 
-    else {
-      let eIndex: number = findIndex("")
+    let eIndex: number = findIndex("")
 
-      if (eIndex == 5) return;
+    if (eIndex == 5) return false;
 
-      words[activeWordIndex][eIndex].char = char
-      words[activeWordIndex][eIndex].animate = true
+    words[activeWordIndex][eIndex].char = char
+    words[activeWordIndex][eIndex].animate = true
 
-      updateWords([...words])
-    }
+    updateWords([...words])
 
+    return true
   }
 
   function popLast() {
@@ -70,6 +80,8 @@ const App = () => {
     let eIndex: number = findIndex("") - 1
 
     if (eIndex == -1) eIndex = 4
+
+    console.log(activeWordIndex)
 
     words[activeWordIndex][eIndex].char = ""; updateWords([...words])
   }
@@ -107,7 +119,7 @@ const App = () => {
       }
 
       else {
-        setUsedLetters(words[activeWordIndex][idx].char, "#3d393979")
+        setUsedLetters(words[activeWordIndex][idx].char, "#221e1e")
       }
 
       if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) != 0) correct = false
@@ -123,8 +135,11 @@ const App = () => {
       }
     }
 
-    if (activeWordIndex + 1 == 6 || correct) end()
+    window.removeEventListener('keydown', keypress)
+
     setActiveWordIndex(activeWordIndex + 1)
+
+    if (activeWordIndex + 1 == 6 || correct) end()
   }
 
   function countInString(word: string, char: string): number {

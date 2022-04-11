@@ -3,13 +3,6 @@ import KeyboardElement from "./KeyboardElement/KeyboardElement"
 
 const KeyboardSection = ({ onClick, fRow, sRow, tRow, disabled }: { onClick: Function, fRow: Array<{ char: string, color: string }>, sRow: Array<{ char: string, color: string }>, tRow: Array<{ char: string, color: string }>, disabled: boolean }) => {
 
-    useEffect(() => {
-        document.addEventListener('keydown', (event) => {
-            if (event.keyCode == 8) onClick("verwijder")
-            else onClick(event.key)
-        })
-    }, [])
-
     return (
         <div className="KeyboardSection">
             {

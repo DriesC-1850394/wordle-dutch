@@ -1,6 +1,6 @@
 import InputElement from "./InputElement/InputElement"
 
-const InputSection = ({ activeWords, activeWordIndex, }: { activeWords: Array<Array<{ char: string, color: string, animate: boolean }>>, activeWordIndex: number }) => {
+const InputSection = ({ activeWords, }: { activeWords: Array<Array<{ char: string, color: string, animate: boolean }>> }) => {
     return (
         <div className="InputSection">
             {activeWords.map((e, idx) =>
