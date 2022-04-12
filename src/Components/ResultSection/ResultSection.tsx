@@ -3,7 +3,7 @@ const ResultSection = ({ showResult, onClose, timeLeft, correctWord, activeWordI
         <div className={showResult ? 'Result' : 'DisplayNone'}>
             <div className="Close" onClick={() => onClose(false)}>X</div>
             <div className="ClosingWord">
-                Meer is onderweg!
+                Resultaat
             </div>
             <div className="ResultWord">
                 {correctWord}
