@@ -40,9 +40,9 @@ const App = () => {
     [{ char: 'w', color: "#3d3939" }, { char: 'x', color: "#3d3939" }, { char: 'c', color: "#3d3939" }, { char: 'v', color: "#3d3939" }, { char: 'b', color: "#3d3939" }, { char: 'n', color: "#3d3939" }]
   ])
 
-  const [activeWordIndex, setActiveWordIndex] = useState<number>(wordData === undefined ? 0 : wordData.activeWordIndex)
   const [correctWord] = useState(daily)
   const [correctGuess, setCorrectGuess] = useState<boolean>(wordData === undefined ? false : wordData.correctGuess)
+  const [activeWordIndex, setActiveWordIndex] = useState<number>(wordData === undefined ? 0 : wordData.correctGuess ? wordData.activeWordIndex : wordData.activeWordIndex + 1)
 
   const [disabled, setDisabled] = useState(endGame)
   const [invalid, setInvalid] = useState(false)
@@ -116,7 +116,7 @@ const App = () => {
 
     setCookies("wData", {
       words: words,
-      activeWordIndex: activeWordIndex + 1,
+      activeWordIndex: activeWordIndex,
       end: false
     }, true)
 
@@ -196,7 +196,7 @@ const App = () => {
 
     setCookies("wData", {
       words: words,
-      activeWordIndex: activeWordIndex + 1,
+      activeWordIndex: activeWordIndex,
       end: true,
       correctGuess: correct
     }, true)
