@@ -50,7 +50,7 @@ const App = () => {
   var keypress = (event: { keyCode: number; key: string; }) => {
     if (disabled) return;
 
-    if (event.keyCode === 8) onKeyPress("verwijder")
+    if (event.keyCode === 8) onKeyPress("delete")
     else onKeyPress(event.key)
   }
 
@@ -87,7 +87,7 @@ const App = () => {
   function onKeyPress(char: string) {
     if (char === undefined) return;
 
-    if (char.localeCompare("verwijder") === 0) {
+    if (char.localeCompare("delete") === 0) {
       setInvalid(false); words[activeWordIndex] = removeLast(words[activeWordIndex]); updateWords([...words])
     }
 
@@ -109,7 +109,9 @@ const App = () => {
 
   // TODO Refactor
   function enterWord() {
-    if (words[activeWordIndex].length < 5 || findIndex("", words[activeWordIndex]) === 0) return;
+    const lastLetterIndex: number = findIndex("", words[activeWordIndex])
+
+    if (lastLetterIndex < 5 || lastLetterIndex === 0) return;
 
     let word = ""
 
