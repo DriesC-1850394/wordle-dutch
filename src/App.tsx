@@ -172,14 +172,18 @@ const App = () => {
   }
 
   function onKeyPress(char: string) {
-    if (!"abcdefghijklmnopqrstuvwxyz".includes(char)) return;
+    if (char.localeCompare('delete') === 0) { onDelete(); }
+    else if (char.localeCompare('enter') === 0) { onEnter(); }
+    else {
+      if (!"abcdefghijklmnopqrstuvwxyz".includes(char)) return;
 
-    let eIndex: number = findIndex("", words[activeWordIndex])
+      let eIndex: number = findIndex("", words[activeWordIndex])
 
-    if (eIndex === 5) return;
+      if (eIndex === 5) return;
 
-    words[activeWordIndex][eIndex].char = char
-    words[activeWordIndex][eIndex].animate = true
+      words[activeWordIndex][eIndex].char = char
+      words[activeWordIndex][eIndex].animate = true
+    }
 
     updateWords([...words])
     setKeyboard([...keyboard])
