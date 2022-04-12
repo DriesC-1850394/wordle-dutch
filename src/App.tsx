@@ -156,7 +156,7 @@ const App = () => {
 
     setCookies("wData", {
       words: words,
-      activeWordIndex: activeWordIndex + 1
+      activeWordIndex: activeWordIndex
     }, true)
 
     if (activeWordIndex + 1 === 6 || correct) end(correct)
@@ -176,7 +176,7 @@ const App = () => {
 
     setCookies("wData", {
       words: words,
-      activeWordIndex: activeWordIndex + 1
+      activeWordIndex: activeWordIndex
     }, true)
 
     let stats: {
