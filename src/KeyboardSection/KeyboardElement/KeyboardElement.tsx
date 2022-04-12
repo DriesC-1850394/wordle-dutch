@@ -1,5 +1,5 @@
 const KeyboardElement = ({ char, color, disabled, onClick }: { char: string, color: string, disabled: boolean, onClick: Function }) => {
-    const className: string = (char.localeCompare('enter') == 0 || char.localeCompare('verwijder') == 0) ?
+    const className: string = (char.localeCompare('enter') === 0 || char.localeCompare('verwijder') === 0) ?
         'KeyboardSpecial' : "KeyboardElement"
 
     return (

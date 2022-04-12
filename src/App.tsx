@@ -1,20 +1,19 @@
-import { faCar, faSquarePollVertical } from '@fortawesome/free-solid-svg-icons';
+import { faSquarePollVertical } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { time } from 'console';
 import { useEffect, useState } from 'react';
+import { Cookies } from 'react-cookie';
 import './App.css';
 import { daily } from './daily_words';
-import { data } from './data'
-import { Cookies } from 'react-cookie'
-
+import { data } from './data';
 import InputSection from './InputSection/InputSection';
 import KeyboardSection from './KeyboardSection/KeyboardSection';
+
 
 const App = () => {
   const cookies = new Cookies()
 
   const [words, updateWords] = useState<Array<Array<{ char: string, color: string, animate: boolean }>>>(
-    cookies.get('wData') == undefined ?
+    cookies.get('wData') === undefined ?
       [
         [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
         [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
@@ -61,17 +60,17 @@ const App = () => {
   }])
   const [thirdRow, setThirdRow] = useState<Array<{ char: string, color: string }>>([{ char: 'w', color: "#3d3939" }, { char: 'x', color: "#3d3939" }, { char: 'c', color: "#3d3939" }, { char: 'v', color: "#3d3939" }, { char: 'b', color: "#3d3939" }, { char: 'n', color: "#3d3939" }])
 
-  const [activeWordIndex, setActiveWordIndex] = useState<number>(cookies.get('wData') == undefined ? 0 : cookies.get('wData').activeWordIndex)
+  const [activeWordIndex, setActiveWordIndex] = useState<number>(cookies.get('wData') === undefined ? 0 : cookies.get('wData').activeWordIndex)
   const [correctWord] = useState(daily)
 
-  const [disabled, setDisabled] = useState(cookies.get("bData") == undefined ? false : true)
+  const [disabled, setDisabled] = useState(cookies.get("bData") === undefined ? false : true)
   const [invalid, setInvalid] = useState(false)
-  const [showResult, setShowResult] = useState(cookies.get("bData") == undefined ? false : true)
+  const [showResult, setShowResult] = useState(cookies.get("bData") === undefined ? false : true)
 
   var keypress = (event: { keyCode: number; key: string; }) => {
     if (disabled) return;
 
-    if (event.keyCode == 8) onKeyPress("verwijder")
+    if (event.keyCode === 8) onKeyPress("verwijder")
     else onKeyPress(event.key)
   }
 
@@ -87,8 +86,7 @@ const App = () => {
     window.addEventListener('keydown', keypress)
 
     return () => window.removeEventListener('keydown', keypress)
-
-  }, [activeWordIndex])
+  })
 
   return (
     <div className="App">
@@ -120,12 +118,12 @@ const App = () => {
   );
 
   function copy() {
-    let string = "https://wordle-dutch.herokuapp.com/ " + (activeWordIndex + 1) + "/6\n\n"
+    let string = "https://wordle-dutch.herokuapp.com/ " + (activeWordIndex) + "/6\n\n"
 
-    for (let idx = 0; idx < activeWordIndex + 1; idx++) {
+    for (let idx = 0; idx < activeWordIndex; idx++) {
       for (let jdx = 0; jdx < 5; jdx++) {
-        if (words[idx][jdx].color.localeCompare("#a6944c") == 0) string += "🟨"
-        else if (words[idx][jdx].color.localeCompare("#70a64c") == 0) string += "🟩"
+        if (words[idx][jdx].color.localeCompare("#a6944c") === 0) string += "🟨"
+        else if (words[idx][jdx].color.localeCompare("#70a64c") === 0) string += "🟩"
         else string += "⬛️"
       }
       string += "\n"
@@ -135,17 +133,17 @@ const App = () => {
   }
 
   function onKeyPress(char: string) {
-    if (char == undefined) return false;
+    if (char === undefined) return false;
 
-    if (char.localeCompare("verwijder") == 0) popLast()
+    if (char.localeCompare("verwijder") === 0) popLast()
 
-    else if (char.toLocaleLowerCase().localeCompare("enter") == 0) enterWord()
+    else if (char.toLocaleLowerCase().localeCompare("enter") === 0) enterWord()
 
     if (!"abcdefghijklmnopqrstuvwxyz".includes(char)) return;
 
     let eIndex: number = findIndex("")
 
-    if (eIndex == 5) return false;
+    if (eIndex === 5) return false;
 
     words[activeWordIndex][eIndex].char = char
     words[activeWordIndex][eIndex].animate = true
@@ -155,17 +153,17 @@ const App = () => {
 
   function popLast() {
     setInvalid(false)
-    if (findIndex("") == 0) return;
+    if (findIndex("") === 0) return;
 
     let eIndex: number = findIndex("") - 1
 
-    if (eIndex == -1) eIndex = 4
+    if (eIndex === -1) eIndex = 4
 
     words[activeWordIndex][eIndex].char = ""; updateWords([...words])
   }
 
   function enterWord() {
-    if (words[activeWordIndex].length < 5 || findIndex("") == 0) return;
+    if (words[activeWordIndex].length < 5 || findIndex("") === 0) return;
 
     let word = ""
 
@@ -184,7 +182,7 @@ const App = () => {
     const lettersFound = []
 
     for (let idx = 0; idx < words[activeWordIndex].length; idx++) {
-      if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) == 0) {
+      if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) === 0) {
         words[activeWordIndex][idx].color = "#70a64c"
 
         lettersFound.push(words[activeWordIndex][idx].char)
@@ -200,7 +198,7 @@ const App = () => {
         setUsedLetters(words[activeWordIndex][idx].char, "#221e1e")
       }
 
-      if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) != 0) correct = false
+      if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) !== 0) correct = false
     }
     for (let idx = 0; idx < words[activeWordIndex].length; idx++) {
       if (correctWord.includes(words[activeWordIndex][idx].char)) {
@@ -220,14 +218,14 @@ const App = () => {
       activeWordIndex: activeWordIndex
     })
 
-    if (activeWordIndex + 1 == 6 || correct) end(correct)
+    if (activeWordIndex + 1 === 6 || correct) end(correct)
   }
 
   function countInString(word: string, char: string): number {
     let count: number = 0;
 
     for (const c of word)
-      count = c.localeCompare(char) == 0 ? count + 1 : count
+      count = c.localeCompare(char) === 0 ? count + 1 : count
 
     return count
   }
@@ -236,14 +234,14 @@ const App = () => {
     let count: number = 0
 
     for (const c of array)
-      count = c.localeCompare(char) == 0 ? count + 1 : count
+      count = c.localeCompare(char) === 0 ? count + 1 : count
 
     return count
   }
 
   function setUsedLetters(char: string, color: string) {
     [firstRow, secondRow, thirdRow].forEach(element => element.forEach(key => {
-      if (key.char.localeCompare(char) == 0 && key.color.localeCompare("#70a64c") != 0) key.color = color
+      if (key.char.localeCompare(char) === 0 && key.color.localeCompare("#70a64c") !== 0) key.color = color
     }))
 
     setFirstRow([...firstRow])
@@ -275,7 +273,7 @@ const App = () => {
       numGuesses: Array<number>
     } = cookies.get("statistics")
 
-    if (stats == undefined) {
+    if (stats === undefined) {
       cookies.set("statistics", {
         numCorrect: correct ? 1 : 0,
         numGuesses: [activeWordIndex]
@@ -294,7 +292,7 @@ const App = () => {
     let index: number = 0
 
     for (index; index < words[activeWordIndex].length; index++)
-      if (words[activeWordIndex][index].char.localeCompare(char) == 0) return index
+      if (words[activeWordIndex][index].char.localeCompare(char) === 0) return index
 
     return index
   }
