@@ -1,19 +1,23 @@
 import { faSquarePollVertical } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
-import { Cookies } from 'react-cookie';
 import './App.css';
+import Time from './Classes/Time';
+import InputSection from './Components/InputSection/InputSection';
+import KeyboardSection from './Components/KeyboardSection/KeyboardSection';
+import ResultSection from './Components/ResultSection/ResultSection';
 import { daily } from './daily_words';
 import { data } from './data';
-import InputSection from './InputSection/InputSection';
-import KeyboardSection from './KeyboardSection/KeyboardSection';
-
+import { findIndex, pop } from './Functions/ArrayFunctions';
+import { getCookies, setCookies } from './Functions/CookiesFunctions';
+import { countInArray, countInString } from './Functions/CountFunctions';
 
 const App = () => {
-  const cookies = new Cookies()
+  const time: Time = new Time()
+  const wordData: any | undefined = getCookies("wData")
 
   const [words, updateWords] = useState<Array<Array<{ char: string, color: string, animate: boolean }>>>(
-    cookies.get('wData') === undefined ?
+    wordData === undefined ?
       [
         [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
         [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
@@ -21,51 +25,26 @@ const App = () => {
         [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
         [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }],
         [{ char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }, { char: "", color: "#3d3939", animate: false }]
-      ] : cookies.get('wData').words)
+      ] : wordData.words)
 
+  const [timeLeft, setTimeLeft] = useState<{ hour: number, minutes: number, seconds: number }>(time.timeleft())
 
-  const calculateTimeLeft = (): { hours: number, minutes: number, seconds: number } => {
-    let tonight: Date = new Date();
+  const [keyboard, setKeyboard] = useState<Array<Array<{ char: string, color: string }>>>([
+    [{ char: 'a', color: "#3d3939" }, { char: 'z', color: "#3d3939" }, { char: 'e', color: "#3d3939" }, { char: 'r', color: "#3d3939" }, { char: 't', color: "#3d3939" }, { char: 'y', color: "#3d3939" }, { char: 'u', color: "#3d3939" }, { char: 'i', color: "#3d3939" }, { char: 'o', color: "#3d3939" }, {
+      char: 'p', color: "#3d3939"
+    }],
+    [{ char: 'q', color: "#3d3939" }, { char: 's', color: "#3d3939" }, { char: 'd', color: "#3d3939" }, { char: 'f', color: "#3d3939" }, { char: 'g', color: "#3d3939" }, { char: 'h', color: "#3d3939" }, { char: 'j', color: "#3d3939" }, { char: 'k', color: "#3d3939" }, { char: 'l', color: "#3d3939" }, {
+      char: 'm', color: "#3d3939"
+    }],
+    [{ char: 'w', color: "#3d3939" }, { char: 'x', color: "#3d3939" }, { char: 'c', color: "#3d3939" }, { char: 'v', color: "#3d3939" }, { char: 'b', color: "#3d3939" }, { char: 'n', color: "#3d3939" }]
+  ])
 
-    tonight.setHours(23)
-    tonight.setMinutes(59)
-    tonight.setSeconds(59)
-
-    let difference = +tonight - +new Date()
-
-    let timeLeft: { hours: number, minutes: number, seconds: number } = {
-      hours: 0,
-      minutes: 0,
-      seconds: 0
-    };
-
-    if (difference > 0) {
-      timeLeft = {
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60)
-      };
-    }
-
-    return timeLeft;
-  }
-
-  const [timeLeft, setTimeLeft] = useState<{ hours: number, minutes: number, seconds: number }>(calculateTimeLeft)
-
-  const [firstRow, setFirstRow] = useState<Array<{ char: string, color: string }>>([{ char: 'a', color: "#3d3939" }, { char: 'z', color: "#3d3939" }, { char: 'e', color: "#3d3939" }, { char: 'r', color: "#3d3939" }, { char: 't', color: "#3d3939" }, { char: 'y', color: "#3d3939" }, { char: 'u', color: "#3d3939" }, { char: 'i', color: "#3d3939" }, { char: 'o', color: "#3d3939" }, {
-    char: 'p', color: "#3d3939"
-  }])
-  const [secondRow, setSecondRow] = useState<Array<{ char: string, color: string }>>([{ char: 'q', color: "#3d3939" }, { char: 's', color: "#3d3939" }, { char: 'd', color: "#3d3939" }, { char: 'f', color: "#3d3939" }, { char: 'g', color: "#3d3939" }, { char: 'h', color: "#3d3939" }, { char: 'j', color: "#3d3939" }, { char: 'k', color: "#3d3939" }, { char: 'l', color: "#3d3939" }, {
-    char: 'm', color: "#3d3939"
-  }])
-  const [thirdRow, setThirdRow] = useState<Array<{ char: string, color: string }>>([{ char: 'w', color: "#3d3939" }, { char: 'x', color: "#3d3939" }, { char: 'c', color: "#3d3939" }, { char: 'v', color: "#3d3939" }, { char: 'b', color: "#3d3939" }, { char: 'n', color: "#3d3939" }])
-
-  const [activeWordIndex, setActiveWordIndex] = useState<number>(cookies.get('wData') === undefined ? 0 : cookies.get('wData').activeWordIndex)
+  const [activeWordIndex, setActiveWordIndex] = useState<number>(wordData === undefined ? 0 : wordData.activeWordIndex)
   const [correctWord] = useState(daily)
 
-  const [disabled, setDisabled] = useState(cookies.get("bData") === undefined ? false : true)
+  const [disabled, setDisabled] = useState(wordData === undefined ? false : true)
   const [invalid, setInvalid] = useState(false)
-  const [showResult, setShowResult] = useState(cookies.get("bData") === undefined ? false : true)
+  const [showResult, setShowResult] = useState(wordData === undefined ? false : true)
 
   var keypress = (event: { keyCode: number; key: string; }) => {
     if (disabled) return;
@@ -76,7 +55,7 @@ const App = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
+      setTimeLeft(time.timeleft());
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -86,7 +65,7 @@ const App = () => {
     window.addEventListener('keydown', keypress)
 
     return () => window.removeEventListener('keydown', keypress)
-  })
+  }, [activeWordIndex])
 
   return (
     <div className="App">
@@ -95,55 +74,29 @@ const App = () => {
         <FontAwesomeIcon icon={faSquarePollVertical} size="2x"></FontAwesomeIcon>
       </div>}
       <div className={invalid ? "WordUnknown" : "DisplayNone"}>Woord is niet gekend</div>
-      <div className={showResult ? 'Result' : 'DisplayNone'}>
-        <div className="Close" onClick={() => setShowResult(false)}>X</div>
-        <div className="ClosingWord">
-          Meer is onderweg!
-        </div>
-        <div className="ResultWord">
-          {correctWord}
-        </div>
-        <div className="BottomSection">
-          <div className="TimeLeft">
-            {timeLeft.hours < 10 ? "0" + timeLeft.hours : timeLeft.hours}:
-            {timeLeft.minutes < 10 ? "0" + timeLeft.minutes : timeLeft.minutes}:
-            {timeLeft.seconds < 10 ? "0" + timeLeft.seconds : timeLeft.seconds}
-          </div>
-          <button className="ShareButton" onClick={() => copy()}>Resultaat Kopieren</button>
-        </div>
-      </div>
+      <ResultSection
+        showResult={showResult} timeLeft={time.format(timeLeft)} correctWord={correctWord} onClose={() => setShowResult(false)}
+        activeWordIndex={activeWordIndex} words={words}
+      />
       <InputSection activeWords={words} />
-      <KeyboardSection onClick={onKeyPress} fRow={firstRow} sRow={secondRow} tRow={thirdRow} disabled={disabled} />
+      <KeyboardSection onClick={onKeyPress} keyboard={keyboard} disabled={disabled} />
     </div>
   );
 
-  function copy() {
-    let string = "https://wordle-dutch.herokuapp.com/ " + (activeWordIndex) + "/6\n\n"
-
-    for (let idx = 0; idx < activeWordIndex; idx++) {
-      for (let jdx = 0; jdx < 5; jdx++) {
-        if (words[idx][jdx].color.localeCompare("#a6944c") === 0) string += "🟨"
-        else if (words[idx][jdx].color.localeCompare("#70a64c") === 0) string += "🟩"
-        else string += "⬛️"
-      }
-      string += "\n"
-    }
-
-    navigator.clipboard.writeText(string)
-  }
-
   function onKeyPress(char: string) {
-    if (char === undefined) return false;
+    if (char === undefined) return;
 
-    if (char.localeCompare("verwijder") === 0) popLast()
+    if (char.localeCompare("verwijder") === 0) {
+      setInvalid(false); words[activeWordIndex] = pop(words[activeWordIndex]); updateWords([...words])
+    }
 
     else if (char.toLocaleLowerCase().localeCompare("enter") === 0) enterWord()
 
     if (!"abcdefghijklmnopqrstuvwxyz".includes(char)) return;
 
-    let eIndex: number = findIndex("")
+    let eIndex: number = findIndex("", words[activeWordIndex])
 
-    if (eIndex === 5) return false;
+    if (eIndex === 5) return;
 
     words[activeWordIndex][eIndex].char = char
     words[activeWordIndex][eIndex].animate = true
@@ -151,19 +104,11 @@ const App = () => {
     updateWords([...words])
   }
 
-  function popLast() {
-    setInvalid(false)
-    if (findIndex("") === 0) return;
 
-    let eIndex: number = findIndex("") - 1
 
-    if (eIndex === -1) eIndex = 4
-
-    words[activeWordIndex][eIndex].char = ""; updateWords([...words])
-  }
-
+  // TODO Refactor
   function enterWord() {
-    if (words[activeWordIndex].length < 5 || findIndex("") === 0) return;
+    if (words[activeWordIndex].length < 5 || findIndex("", words[activeWordIndex]) === 0) return;
 
     let word = ""
 
@@ -190,16 +135,12 @@ const App = () => {
         setUsedLetters(words[activeWordIndex][idx].char, "#70a64c")
       }
 
-      else if (correctWord.includes(words[activeWordIndex][idx].char)) {
-        setUsedLetters(words[activeWordIndex][idx].char, "#a6944c")
-      }
-
-      else {
-        setUsedLetters(words[activeWordIndex][idx].char, "#221e1e")
-      }
+      else if (correctWord.includes(words[activeWordIndex][idx].char)) setUsedLetters(words[activeWordIndex][idx].char, "#a6944c")
+      else setUsedLetters(words[activeWordIndex][idx].char, "#221e1e")
 
       if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) !== 0) correct = false
     }
+
     for (let idx = 0; idx < words[activeWordIndex].length; idx++) {
       if (correctWord.includes(words[activeWordIndex][idx].char)) {
 
@@ -213,88 +154,44 @@ const App = () => {
 
     setActiveWordIndex(activeWordIndex + 1)
 
-    cookies.set("wData", {
+    setCookies("wData", {
       words: words,
-      activeWordIndex: activeWordIndex
-    })
+      activeWordIndex: activeWordIndex + 1
+    }, true)
 
     if (activeWordIndex + 1 === 6 || correct) end(correct)
   }
 
-  function countInString(word: string, char: string): number {
-    let count: number = 0;
-
-    for (const c of word)
-      count = c.localeCompare(char) === 0 ? count + 1 : count
-
-    return count
-  }
-
-  function countInArray(array: Array<string>, char: string): number {
-    let count: number = 0
-
-    for (const c of array)
-      count = c.localeCompare(char) === 0 ? count + 1 : count
-
-    return count
-  }
-
   function setUsedLetters(char: string, color: string) {
-    [firstRow, secondRow, thirdRow].forEach(element => element.forEach(key => {
+    keyboard.forEach(element => element.forEach(key => {
       if (key.char.localeCompare(char) === 0 && key.color.localeCompare("#70a64c") !== 0) key.color = color
     }))
 
-    setFirstRow([...firstRow])
-    setSecondRow([...secondRow])
-    setThirdRow([...thirdRow])
+    setKeyboard([...keyboard])
   }
 
   function end(correct: boolean) {
     setShowResult(true)
     setDisabled(true)
 
-    let timeLeft: { hours: number, minutes: number, seconds: number } = calculateTimeLeft()
-
-    let maxTime: number = timeLeft.hours * 3600 + timeLeft.minutes * 60 + timeLeft.seconds
-
-    cookies.set("wData", {
+    setCookies("wData", {
       words: words,
-      activeWordIndex: activeWordIndex
-    }, {
-      maxAge: maxTime
-    })
-
-    cookies.set("bData", true, {
-      maxAge: maxTime
-    })
+      activeWordIndex: activeWordIndex + 1
+    }, true)
 
     let stats: {
       numCorrect: number,
       numGuesses: Array<number>
-    } = cookies.get("statistics")
+    } | undefined = getCookies("statistics")
 
-    if (stats === undefined) {
-      cookies.set("statistics", {
-        numCorrect: correct ? 1 : 0,
-        numGuesses: [activeWordIndex]
-      })
-    }
+    if (stats === undefined) setCookies("statistics", { numCorrect: correct ? 1 : 0, numGuesses: [activeWordIndex + 1] }, false)
 
     else {
       stats.numGuesses.push(activeWordIndex + 1)
       stats.numCorrect = correct ? stats.numCorrect + 1 : stats.numCorrect
 
-      cookies.set("statistics", stats)
+      setCookies("statistics", stats, false)
     }
-  }
-
-  function findIndex(char: string): number {
-    let index: number = 0
-
-    for (index; index < words[activeWordIndex].length; index++)
-      if (words[activeWordIndex][index].char.localeCompare(char) === 0) return index
-
-    return index
   }
 }
 
