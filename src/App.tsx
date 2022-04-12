@@ -75,7 +75,6 @@ const App = () => {
 
   return (
     <div className="App">
-      <div className="InDevelopment">In Development</div>
       {disabled && <div className="ShowRresult" onClick={() => setShowResult(true)}>
         <FontAwesomeIcon icon={faSquarePollVertical} size="2x"></FontAwesomeIcon>
       </div>}
