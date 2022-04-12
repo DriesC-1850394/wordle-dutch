@@ -15,6 +15,7 @@ import { countInArray, countInString } from './Functions/CountFunctions';
 const App = () => {
   const time: Time = new Time()
   const wordData: any | undefined = getCookies("wData")
+  const endGame: boolean = wordData === undefined ? false : wordData.end
 
   const [words, updateWords] = useState<Array<Array<{ char: string, color: string, animate: boolean }>>>(
     wordData === undefined ?
@@ -42,9 +43,9 @@ const App = () => {
   const [activeWordIndex, setActiveWordIndex] = useState<number>(wordData === undefined ? 0 : wordData.activeWordIndex)
   const [correctWord] = useState(daily)
 
-  const [disabled, setDisabled] = useState(wordData === undefined ? false : true)
+  const [disabled, setDisabled] = useState(endGame)
   const [invalid, setInvalid] = useState(false)
-  const [showResult, setShowResult] = useState(wordData === undefined ? false : true)
+  const [showResult, setShowResult] = useState(endGame)
 
   var keypress = (event: { keyCode: number; key: string; }) => {
     if (disabled) return;
@@ -156,7 +157,8 @@ const App = () => {
 
     setCookies("wData", {
       words: words,
-      activeWordIndex: activeWordIndex
+      activeWordIndex: activeWordIndex + 1,
+      end: false
     }, true)
 
     if (activeWordIndex + 1 === 6 || correct) end(correct)
@@ -176,7 +178,8 @@ const App = () => {
 
     setCookies("wData", {
       words: words,
-      activeWordIndex: activeWordIndex
+      activeWordIndex: activeWordIndex + 1,
+      end: true
     }, true)
 
     let stats: {
