@@ -8,9 +8,9 @@ import KeyboardSection from './Components/KeyboardSection/KeyboardSection';
 import ResultSection from './Components/ResultSection/ResultSection';
 import { daily } from './daily_words';
 import { data } from './data';
-import { findIndex, removeLast } from './Functions/ArrayFunctions';
-import { getCookies, setCookies } from './Functions/CookiesFunctions';
-import { countInArray, countInString } from './Functions/CountFunctions';
+import { findIndex, removeLast } from './Modules/ArrayFunctions';
+import { getCookies, setCookies } from './Modules/CookiesFunctions';
+import { countInArray, countInString } from './Modules/CountFunctions';
 
 const App = () => {
   const time: Time = new Time()
@@ -42,16 +42,21 @@ const App = () => {
 
   const [activeWordIndex, setActiveWordIndex] = useState<number>(wordData === undefined ? 0 : wordData.activeWordIndex)
   const [correctWord] = useState(daily)
+  const [correctGuess, setCorrectGuess] = useState<boolean>(wordData === undefined ? false : wordData.correctGuess)
 
   const [disabled, setDisabled] = useState(endGame)
   const [invalid, setInvalid] = useState(false)
   const [showResult, setShowResult] = useState(endGame)
 
   var keypress = (event: { keyCode: number; key: string; }) => {
-    if (disabled) return;
+    if (disabled || event.keyCode === undefined) return;
 
-    if (event.keyCode === 8) onKeyPress("delete")
+    if (event.keyCode === 8) onDelete()
+    else if (event.keyCode == 13) onEnter()
     else onKeyPress(event.key)
+
+    updateWords([...words])
+    setKeyboard([...keyboard])
   }
 
   useEffect(() => {
@@ -77,22 +82,97 @@ const App = () => {
       <div className={invalid ? "WordUnknown" : "DisplayNone"}>Woord is niet gekend</div>
       <ResultSection
         showResult={showResult} timeLeft={time.format(timeLeft)} correctWord={correctWord} onClose={() => setShowResult(false)}
-        activeWordIndex={activeWordIndex} words={words}
+        activeWordIndex={activeWordIndex} words={words} correctGuess={correctGuess}
       />
       <InputSection activeWords={words} />
       <KeyboardSection onClick={onKeyPress} keyboard={keyboard} disabled={disabled} />
     </div>
   );
 
-  function onKeyPress(char: string) {
-    if (char === undefined) return;
+  function onDelete() {
+    setInvalid(false);
+    words[activeWordIndex] = removeLast(words[activeWordIndex]);
+  }
 
-    if (char.localeCompare("delete") === 0) {
-      setInvalid(false); words[activeWordIndex] = removeLast(words[activeWordIndex]); updateWords([...words])
+  function onEnter() {
+    const lastLetterIndex: number = findIndex("", words[activeWordIndex])
+
+    if (lastLetterIndex < 5 || lastLetterIndex === 0) return;
+
+    let word: string = words[activeWordIndex].map(o => o.char).join("")
+
+    // Handle faulty words
+    if (!data.includes(word)) {
+      setInvalid(true); return;
     }
 
-    else if (char.toLocaleLowerCase().localeCompare("enter") === 0) enterWord()
+    const lettersFound: Array<string> = []
 
+    // Check for correct letters
+    let correct: boolean = checkCorrectLetters(lettersFound)
+    if (correct) { end(correct); return; }
+
+    // Check for misplaced letters
+    checkMisplacedLetters(lettersFound)
+
+    setCookies("wData", {
+      words: words,
+      activeWordIndex: activeWordIndex + 1,
+      end: false
+    }, true)
+
+    setActiveWordIndex(activeWordIndex + 1)
+
+    if (activeWordIndex + 1 === 6) end(correct)
+  }
+
+  function checkCorrectLetters(lettersFound: Array<string>): boolean {
+    let correct: boolean = true
+
+    for (let idx = 0; idx < words[activeWordIndex].length; idx++) {
+      const char: string = words[activeWordIndex][idx].char
+
+      if (char.localeCompare(correctWord[idx]) === 0) {
+        setInputLetterColor(words[activeWordIndex][idx], "#70a64c")
+        setKeyboardLetterColor(char, "#70a64c")
+
+        lettersFound.push(char)
+      }
+
+      else correct = false
+    }
+
+    return correct
+  }
+
+  function checkMisplacedLetters(lettersFound: Array<string>) {
+    for (let idx = 0; idx < words[activeWordIndex].length; idx++) {
+      const char: string = words[activeWordIndex][idx].char
+
+      if (!correctWord.includes(char)) { setKeyboardLetterColor(char, "#221e1e"); continue; }
+      else setKeyboardLetterColor(char, "#a6944c")
+
+      const tCharInString: number = countInString(correctWord, char)
+      const tCharInArray: number = countInArray(lettersFound, char)
+
+      if (!lettersFound.includes(char) && tCharInArray < tCharInString) {
+        words[activeWordIndex][idx].color = "#a6944c"
+        lettersFound.push(char)
+      }
+    }
+  }
+
+  function setInputLetterColor(element: { char: string, color: string, animate: boolean }, color: string) {
+    element.color = color
+  }
+
+  function setKeyboardLetterColor(char: string, color: string) {
+    keyboard.forEach(element => element.forEach(key => {
+      if (key.char.localeCompare(char) === 0 && key.color.localeCompare("#70a64c") !== 0) key.color = color
+    }))
+  }
+
+  function onKeyPress(char: string) {
     if (!"abcdefghijklmnopqrstuvwxyz".includes(char)) return;
 
     let eIndex: number = findIndex("", words[activeWordIndex])
@@ -103,85 +183,19 @@ const App = () => {
     words[activeWordIndex][eIndex].animate = true
 
     updateWords([...words])
-  }
-
-
-
-  // TODO Refactor
-  function enterWord() {
-    const lastLetterIndex: number = findIndex("", words[activeWordIndex])
-
-    if (lastLetterIndex < 5 || lastLetterIndex === 0) return;
-
-    let word = ""
-
-    words[activeWordIndex].forEach(element => {
-      word += element.char
-    })
-
-    // Handle faulty words
-    if (!data.includes(word)) {
-      setInvalid(true)
-      return;
-    }
-
-    let correct: boolean = true
-
-    const lettersFound = []
-
-    for (let idx = 0; idx < words[activeWordIndex].length; idx++) {
-      if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) === 0) {
-        words[activeWordIndex][idx].color = "#70a64c"
-
-        lettersFound.push(words[activeWordIndex][idx].char)
-
-        setUsedLetters(words[activeWordIndex][idx].char, "#70a64c")
-      }
-
-      else if (correctWord.includes(words[activeWordIndex][idx].char)) setUsedLetters(words[activeWordIndex][idx].char, "#a6944c")
-      else setUsedLetters(words[activeWordIndex][idx].char, "#221e1e")
-
-      if (words[activeWordIndex][idx].char.localeCompare(correctWord[idx]) !== 0) correct = false
-    }
-
-    for (let idx = 0; idx < words[activeWordIndex].length; idx++) {
-      if (correctWord.includes(words[activeWordIndex][idx].char)) {
-
-        if (!lettersFound.includes(words[activeWordIndex][idx].char) &&
-          countInString(correctWord, words[activeWordIndex][idx].char) > countInArray(lettersFound, words[activeWordIndex][idx].char)) {
-          words[activeWordIndex][idx].color = "#a6944c"
-          lettersFound.push(words[activeWordIndex][idx].char)
-        }
-      }
-    }
-
-    setActiveWordIndex(activeWordIndex + 1)
-
-    setCookies("wData", {
-      words: words,
-      activeWordIndex: activeWordIndex + 1,
-      end: false
-    }, true)
-
-    if (activeWordIndex + 1 === 6 || correct) end(correct)
-  }
-
-  function setUsedLetters(char: string, color: string) {
-    keyboard.forEach(element => element.forEach(key => {
-      if (key.char.localeCompare(char) === 0 && key.color.localeCompare("#70a64c") !== 0) key.color = color
-    }))
-
     setKeyboard([...keyboard])
   }
 
   function end(correct: boolean) {
     setShowResult(true)
     setDisabled(true)
+    setCorrectGuess(correct)
 
     setCookies("wData", {
       words: words,
       activeWordIndex: activeWordIndex + 1,
-      end: true
+      end: true,
+      correctGuess: correct
     }, true)
 
     let stats: {

@@ -1,11 +1,11 @@
-const ResultSection = ({ showResult, onClose, timeLeft, correctWord, activeWordIndex, words }: { showResult: boolean, onClose: Function, timeLeft: string, correctWord: string, activeWordIndex: number, words: Array<Array<{ char: string, color: string, animate: boolean }>> }) => {
+const ResultSection = ({ showResult, onClose, timeLeft, correctWord, activeWordIndex, words, correctGuess }: { showResult: boolean, onClose: Function, timeLeft: string, correctWord: string, activeWordIndex: number, words: Array<Array<{ char: string, color: string, animate: boolean }>>, correctGuess: boolean }) => {
     return (
         <div className={showResult ? 'Result' : 'DisplayNone'}>
             <div className="Close" onClick={() => onClose(false)}>X</div>
             <div className="ClosingWord">
                 Resultaat
             </div>
-            <div className="ResultWord">
+            <div className="ResultWord" style={{ border: "2px solid " + (correctGuess ? "#70a64c" : "#a64c4c"), borderRadius: 4, padding: "10px 50px" }}>
                 {correctWord}
             </div>
             <div className="BottomSection">
