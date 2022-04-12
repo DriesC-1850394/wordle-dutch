@@ -8,7 +8,7 @@ import KeyboardSection from './Components/KeyboardSection/KeyboardSection';
 import ResultSection from './Components/ResultSection/ResultSection';
 import { daily } from './daily_words';
 import { data } from './data';
-import { findIndex, pop } from './Functions/ArrayFunctions';
+import { findIndex, removeLast } from './Functions/ArrayFunctions';
 import { getCookies, setCookies } from './Functions/CookiesFunctions';
 import { countInArray, countInString } from './Functions/CountFunctions';
 
@@ -88,7 +88,7 @@ const App = () => {
     if (char === undefined) return;
 
     if (char.localeCompare("verwijder") === 0) {
-      setInvalid(false); words[activeWordIndex] = pop(words[activeWordIndex]); updateWords([...words])
+      setInvalid(false); words[activeWordIndex] = removeLast(words[activeWordIndex]); updateWords([...words])
     }
 
     else if (char.toLocaleLowerCase().localeCompare("enter") === 0) enterWord()
