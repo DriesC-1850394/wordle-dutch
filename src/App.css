@@ -359,3 +359,11 @@
     height: 40vh;
   }
 }
+
+.DuordleInput {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  column-gap: 15px;
+}

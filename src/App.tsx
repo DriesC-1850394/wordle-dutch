@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import './App.css';
 import Time from './Classes/Time';
+import Duordle from './Components/Games/Duordle';
+import Wordle from './Components/Games/Wordle';
 import InputSection from './Components/InputSection/InputSection';
 import KeyboardSection from './Components/KeyboardSection/KeyboardSection';
 import ResultSection from './Components/ResultSection/ResultSection';
@@ -12,11 +14,16 @@ import { findIndex, removeLast } from './Modules/ArrayFunctions';
 import { getCookies, setCookies } from './Modules/CookiesFunctions';
 import { countInArray, countInString } from './Modules/CountFunctions';
 
+// TODO Change layotu on 1000px
+
 const App = () => {
+  const [gameMode, setGameMode] = useState<"wordle" | "duordle">("wordle")
+
   const time: Time = new Time()
-  const wordData: any | undefined = getCookies("wData")
+  const wordData: any | undefined = fetchCookies()
   const endGame: boolean = wordData === undefined ? false : wordData.end
 
+  // FIXME REMOVE ME
   const [words, updateWords] = useState<Array<Array<{ char: string, color: string, animate: boolean }>>>(
     wordData === undefined ?
       [
@@ -77,16 +84,7 @@ const App = () => {
 
   return (
     <div className="App">
-      {disabled && <div className="ShowRresult" onClick={() => setShowResult(true)}>
-        <FontAwesomeIcon icon={faSquarePollVertical} size="2x"></FontAwesomeIcon>
-      </div>}
-      <div className={invalid ? "WordUnknown" : "DisplayNone"}>Woord is niet gekend</div>
-      <ResultSection
-        showResult={showResult} timeLeft={time.format(timeLeft)} correctWord={correctWord} onClose={() => setShowResult(false)}
-        activeWordIndex={activeWordIndex} words={words} correctGuess={correctGuess}
-      />
-      <InputSection activeWords={words} />
-      <KeyboardSection onClick={onKeyPress} keyboard={keyboard} disabled={disabled} />
+      <Duordle />
     </div>
   );
 
@@ -115,8 +113,6 @@ const App = () => {
 
     // Check for misplaced letters
     checkMisplacedLetters(lettersFound)
-
-
 
     setCookies("wData", {
       words: words,
@@ -200,11 +196,11 @@ const App = () => {
     setDisabled(true)
     setCorrectGuess(correct)
 
-    setCookies("wData", {
+    setCookies(gameMode.localeCompare('wordle') == 0 ? 'wData' : 'duordle', {
       words: words,
       activeWordIndex: activeWordIndex,
       end: true,
-      correctGuess: correct
+      correctGuess: correct,
     }, true)
 
     setCookies("keyboard", keyboard, true)
@@ -222,6 +218,12 @@ const App = () => {
 
       setCookies("statistics", stats, false)
     }
+  }
+
+  function fetchCookies(): any | undefined {
+    if (gameMode.localeCompare('wordle') === 0) return getCookies("wData")
+
+    return getCookies('duordle')
   }
 }
 
