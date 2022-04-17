@@ -64,7 +64,7 @@ const App = () => {
     setShowResult(game.ended())
 
     setKeyboard(
-      dim === 2 ?
+      dim === 2 || getCookies === undefined ?
         [
           [{ char: 'a', color: "#3d3939" }, { char: 'z', color: "#3d3939" }, { char: 'e', color: "#3d3939" }, { char: 'r', color: "#3d3939" }, { char: 't', color: "#3d3939" }, { char: 'y', color: "#3d3939" }, { char: 'u', color: "#3d3939" }, { char: 'i', color: "#3d3939" }, { char: 'o', color: "#3d3939" }, {
             char: 'p', color: "#3d3939"
