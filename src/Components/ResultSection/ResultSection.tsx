@@ -16,7 +16,7 @@ const ResultSection = ({ showResult, onClose, timeLeft, correctWords, correctGue
                 <div className="TimeLeft">
                     {timeLeft}
                 </div>
-                <button className="ShareButton" onClick={() => copy()}>Resultaat Kopieren</button>
+                <button className="ShareButton" onClick={copy()}>Resultaat Kopieren</button>
             </div>
         </div>
     )

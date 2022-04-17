@@ -182,7 +182,10 @@ export class Game {
 
                 const char: string = cArray[idx].char
 
-                if (!cWord.includes(char)) continue;
+                if (!cWord.includes(char)) {
+                    this.setKeyboardLetter("#221e1e", keyboard, char)
+                    continue;
+                };
 
                 const tCharInString: number = countInString(cWord, char)
                 const tCharInArray: number = countInArray(lettersFound[dim], char)
