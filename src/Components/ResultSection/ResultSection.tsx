@@ -1,13 +1,14 @@
-const ResultSection = ({ showResult, onClose, timeLeft, correctWord, activeWordIndex, words, correctGuess }: { showResult: boolean, onClose: Function, timeLeft: string, correctWord: string, activeWordIndex: number, words: Array<Array<{ char: string, color: string, animate: boolean }>>, correctGuess: boolean }) => {
+const ResultSection = ({ showResult, onClose, timeLeft, correctWords, correctGuess, copy }: { showResult: boolean, onClose: Function, timeLeft: string, correctWords: Array<string>, correctGuess: Array<boolean>, copy: Function }) => {
     return (
         <div className={showResult ? 'Result' : 'DisplayNone'}>
             <div className="Close" onClick={() => onClose(false)}>X</div>
             <div className="ClosingWord">
                 Resultaat
             </div>
-            <div className="ResultWord" style={{ border: "2px solid " + (correctGuess ? "#70a64c" : "#a64c4c"), borderRadius: 4, padding: "10px 50px" }}>
-                {correctWord}
-            </div>
+            {correctWords.map((word, index) =>
+                <div className="ResultWord" style={{ border: "2px solid " + (correctGuess[index] ? "#70a64c" : "#a64c4c"), borderRadius: 4, padding: "10px 50px" }}>
+                    {word}
+                </div>)}
             <div className="BottomSection">
                 <div className="TimeLeft">
                     {timeLeft}
@@ -16,21 +17,6 @@ const ResultSection = ({ showResult, onClose, timeLeft, correctWord, activeWordI
             </div>
         </div>
     )
-
-    function copy() {
-        let string = "https://wordle-dutch.herokuapp.com/ " + (activeWordIndex + 1) + "/6\n\n"
-
-        for (let idx = 0; idx < activeWordIndex + 1; idx++) {
-            for (let jdx = 0; jdx < 5; jdx++) {
-                if (words[idx][jdx].color.localeCompare("#a6944c") === 0) string += "🟨"
-                else if (words[idx][jdx].color.localeCompare("#70a64c") === 0) string += "🟩"
-                else string += "⬛️"
-            }
-            string += "\n"
-        }
-
-        navigator.clipboard.writeText(string)
-    }
 }
 
 export default ResultSection
