@@ -5,10 +5,13 @@ const ResultSection = ({ showResult, onClose, timeLeft, correctWords, correctGue
             <div className="ClosingWord">
                 Resultaat
             </div>
-            {correctWords.map((word, index) =>
-                <div className="ResultWord" style={{ border: "2px solid " + (correctGuess[index] ? "#70a64c" : "#a64c4c"), borderRadius: 4, padding: "10px 50px" }}>
-                    {word}
-                </div>)}
+            <div className="Words">
+                {correctWords.map((word, index) =>
+                    <div className="ResultWord" style={{ border: "2px solid " + (correctGuess[index] ? "#70a64c" : "#a64c4c"), borderRadius: 4, padding: "10px 50px" }}>
+                        {word}
+                    </div>)}
+            </div>
+
             <div className="BottomSection">
                 <div className="TimeLeft">
                     {timeLeft}

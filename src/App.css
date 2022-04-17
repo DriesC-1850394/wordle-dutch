@@ -245,6 +245,7 @@
   animation: show 3s forwards;
 
   border-radius: 8px;
+  border: 10px solid #262222;
 }
 
 .Close {
@@ -281,95 +282,13 @@
   font-style: italic;
 }
 
-@media only screen and (max-width: 1000px) {
-  .App {
-    row-gap: 20px;
-  }
-
-  .KeyboardElement {
-    width: 60px;
-    height: 70px;
-  }
-
-  .KeyboardSpecial {
-    width: 128px;
-    height: 70px;
-  }
-}
-
-@media only screen and (max-width: 700px) {
-  .KeyboardElement {
-    width: 45px;
-  }
-
-  .KeyboardSpecial {
-    width: 98px;
-  }
-
-  .KeyboardElement,
-  .KeyboardSpecial {
-    font-size: 14px;
-    height: 60px;
-  }
-}
-
-@media only screen and (max-width: 540px) {
-  .App {
-    justify-content: center;
-    align-items: center;
-    row-gap: 20px;
-
-    height: 100%;
-    position: fixed;
-
-    padding: 0;
-  }
-
-  .KeyboardElement {
-    width: 30px;
-    height: 40px;
-  }
-
-  .KeyboardSpecial {
-    width: 60px;
-    height: 40px;
-  }
-
-  .KeyboardElement,
-  .KeyboardSpecial {
-    font-size: 10px;
-    font-weight: normal;
-  }
-
-  .KeyboardElements {
-    column-gap: 5px;
-  }
-
-  .InputElement {
-    width: 40px;
-    height: 40px;
-
-    font-weight: normal;
-    font-size: 12px;
-  }
-
-  .InDevelopment {
-    font-size: 12px;
-    font-weight: normal;
-  }
-
-  .Result {
-    width: 60vw;
-    height: 40vh;
-  }
-}
-
-.DuordleInput {
+.Words {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 
-  column-gap: 15px;
+  row-gap: 10px;
 }
 
 .InputWrapper {
@@ -408,4 +327,132 @@
   align-items: center;
 
   top: 20px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .App {
+    row-gap: 20px;
+  }
+
+  .KeyboardElement {
+    width: 60px;
+    height: 70px;
+  }
+
+  .KeyboardSpecial {
+    width: 128px;
+    height: 70px;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .App {
+    justify-content: space-evenly;
+  }
+
+  .TopSection {
+    display: none;
+  }
+
+  .KeyboardElement {
+    width: 45px;
+  }
+
+  .InputWrapper {
+    display: flex;
+    flex-direction: column;
+
+    row-gap: 25px;
+  }
+
+  .InputSection {
+    margin-top: 0;
+  }
+
+  .KeyboardSpecial {
+    width: 98px;
+  }
+
+  .KeyboardElement,
+  .KeyboardSpecial {
+    font-size: 14px;
+    height: 60px;
+  }
+
+  .InputElement {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media only screen and (max-width: 540px) {
+  .App {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+    row-gap: 20px;
+
+    height: 100%;
+
+    padding: 0;
+  }
+
+  .KeyboardElement {
+    width: 25px;
+    height: 30px;
+  }
+
+  .KeyboardSection {
+    row-gap: 5px;
+  }
+
+  .KeyboardSpecial {
+    width: 53px;
+    height: 30px;
+  }
+
+  .InputWrapper {
+    row-gap: 10px;
+  }
+
+  .TopSection {
+    display: none;
+  }
+
+  .KeyboardElement,
+  .KeyboardSpecial {
+    font-size: 8px;
+    font-weight: normal;
+  }
+
+  .KeyboardElements {
+    column-gap: 3px;
+  }
+
+  .InputElement {
+    width: 30px;
+    height: 30px;
+
+    font-weight: normal;
+    font-size: 10px;
+  }
+
+  .InDevelopment {
+    font-size: 12px;
+    font-weight: normal;
+  }
+
+  .Result {
+    width: 60vw;
+    height: 40vh;
+  }
+}
+
+.DuordleInput {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  column-gap: 15px;
 }

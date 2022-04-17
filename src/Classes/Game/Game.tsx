@@ -37,7 +37,9 @@ export class Game {
 
         this.endWords = getDailyWords(dimension)
 
-        let cookies = getCookies('wData')
+        let cookies = undefined
+
+        if (this.dimension === 1) cookies = getCookies('wData')
 
         if (cookies) {
             this.words = cookies.words
