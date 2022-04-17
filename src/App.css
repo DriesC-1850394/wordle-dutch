@@ -282,6 +282,10 @@
 }
 
 @media only screen and (max-width: 1000px) {
+  .App {
+    row-gap: 20px;
+  }
+
   .KeyboardElement {
     width: 60px;
     height: 70px;
@@ -313,7 +317,7 @@
   .App {
     justify-content: center;
     align-items: center;
-    row-gap: 60px;
+    row-gap: 20px;
 
     height: 100%;
     position: fixed;
