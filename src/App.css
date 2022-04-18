@@ -329,6 +329,31 @@
   top: 20px;
 }
 
+@media only screen and (max-width: 1444px) {
+  .App {
+    row-gap: 20px;
+  }
+
+  .InputSection {
+    margin-top: 20px;
+  }
+
+  .InputElement {
+    width: 60px;
+    height: 60px;
+  }
+
+  .KeyboardElement {
+    width: 60px;
+    height: 70px;
+  }
+
+  .KeyboardSpecial {
+    width: 128px;
+    height: 70px;
+  }
+}
+
 @media only screen and (max-width: 1000px) {
   .App {
     row-gap: 20px;
